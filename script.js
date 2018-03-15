@@ -1,17 +1,18 @@
 let playCount = 1; //this is for checking how many times a player has played; playing at the start sets it to 1
 let numSquares = 6;
 let colors = generateRandomColors(numSquares);
-let pickedColor = pickColor();
+let pickedColor = pickRandomColor();
 
 // Get dom elements
 let h1 = document.querySelector("h1");
-let squares = document.getElementsByClassName('.square');
+let squares = document.getElementsByClassName('square');
 let colorDisplay = document.getElementById("colorDisplay");
 let messageDisplay = document.getElementById("message");
 let resetButton = document.getElementById("reset");
 let easyBtn = document.getElementById("easyBtn");
 let hardBtn = document.getElementById("hardBtn");
 
+// Set header to display RGB value of picked color
 colorDisplay.textContent = pickedColor;
 
 easyBtn.addEventListener("click", function(){
@@ -20,7 +21,7 @@ easyBtn.addEventListener("click", function(){
     easyBtn.classList.add("selected");
     numSquares = 3;
     colors = generateRandomColors(numSquares);
-    pickedColor = pickColor();
+    pickedColor = pickRandomColor();
     colorDisplay.textContent = pickedColor;
     for(let i = 0; i < squares.length; i++ ) {
         if(colors[i]) {
@@ -37,7 +38,7 @@ hardBtn.addEventListener("click", function(){
     hardBtn.classList.add("selected");
     numSquares = 6;
     colors = generateRandomColors(numSquares);
-    pickedColor = pickColor();
+    pickedColor = pickRandomColor();
     colorDisplay.textContent = pickedColor;
     for(let i = 0; i < squares.length; i++ ) {  
             squares[i].style.background = colors[i];
@@ -50,7 +51,7 @@ resetButton.addEventListener("click",function(){
     //generate new colors
     colors = generateRandomColors(numSquares);
     //pick a new random color
-    pickedColor = pickColor();
+    pickedColor = pickRandomColor();
     //change color display to match picked color
     colorDisplay.textContent = pickedColor;
     //change colors of the squares
@@ -85,14 +86,12 @@ for(let i = 0; i < squares.length; i++) {
 }
 
 function changeColors(color) {
-    //loop through all squares
     for(let i = 0; i < squares.length; i++) {
         squares[i].style.background = color;
     }
-    //change each 
 }
 
-function pickColor() {
+function pickRandomColor() {
     let random = Math.floor(Math.random() * colors.length);
     return colors[random];
 }
