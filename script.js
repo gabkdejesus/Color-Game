@@ -99,19 +99,23 @@ function pickColor() {
 
 function generateRandomColors(num) {
     let colors = [];
-    if(playCount > 1) {
-        let getCurrentColorDisplay = document.getElementById("colorDisplay");
-        let getRGBValues = getCurrentColorDisplay.textContent.match(/[+-]?\d+(?:\.\d+)?/g);
-        colors.push(randomizeRGB(getRGBValues));
+    if(playCount === 1) {
+        for(let i = 0; i < num; i++) {
+            colors.push(randomizeNewRGB([0, 0, 0]));
+        }
     }
     else {
-        colors.push(randomizeRGB([0, 0, 0]));
+        let getCurrentColorDisplay = document.getElementById("colorDisplay");
+        let oldRGBValues = getCurrentColorDisplay.textContent.match(/[+-]?\d+(?:\.\d+)?/g);
+        for(let i = 0; i < num; i++) {
+            colors.push(randomizeNewRGB(oldRGBValues));
+        }
     }
     return colors;
 }
 
 // Accepts an array of old RGB values, and returns an array of new ones
-function randomizeRGB(oldVals) { 
-    let [r, g, b] = arguments[0].map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
-    return `rgb(${r}, ${g}, ${b})`;
+function randomizeNewRGB(oldVals) { 
+    let [r, g, b] = oldVals.map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
+    return [`rgb(${r}, ${g}, ${b})`];
 }
