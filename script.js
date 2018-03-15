@@ -14,6 +14,7 @@ let hardBtn = document.getElementById("hardBtn");
 
 // Set header to display RGB value of picked color
 colorDisplay.textContent = pickedColor;
+initSquares();
 
 easyBtn.addEventListener("click", function(){
     ++playCount; //increment every time player plays again
@@ -61,28 +62,30 @@ resetButton.addEventListener("click",function(){
     h1.style.background = "steelblue";
     messageDisplay.textContent = " ";
     this.textContent = "New Colors";
-    
 });
 
-for(let i = 0; i < squares.length; i++) {
-    //add initial colors to squares
-    squares[i].style.background = colors[i];
-    //add click listeners to squares
-    squares[i].addEventListener("click", function(){
-    //check color of clicked square
-    //compare to picked color
-    let clickedColor = this.style.background;
-        if(clickedColor === pickedColor) {
-            messageDisplay.textContent = "Correct!";
-            resetButton.textContent = "Play Again";
-            changeColors(pickedColor);
-            h1.style.background = clickedColor;
-        } else {
-            this.style.background = "#232323";
-            messageDisplay.textContent = "Try Again";
-        }
-            
-    });
+// Setup squares colors
+function initSquares() {
+    for(let i = 0; i < squares.length; i++) {
+        squares[i].style.background = colors[i];
+
+        // Listener for correct guess
+        squares[i].addEventListener("click", function(){
+            let clickedColor = this.style.backgroundColor;
+            console.log(clickedColor);
+            console.log(pickedColor);
+            if(clickedColor === pickedColor) {
+                messageDisplay.textContent = "Correct!";
+                resetButton.textContent = "Play Again";
+                changeColors(pickedColor);
+                h1.style.background = clickedColor;
+            }
+            else {
+                this.style.background = "#232323";
+                messageDisplay.textContent = "Try Again";
+            }     
+        });
+    }
 }
 
 function changeColors(color) {
@@ -113,8 +116,8 @@ function generateRandomColors(num) {
     return colors;
 }
 
-// Accepts an array of old RGB values, and returns an array of new ones
+// Accepts an array of old RGB values, and returns an RGB value
 function randomizeNewRGB(oldVals) { 
     let [r, g, b] = oldVals.map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
-    return [`rgb(${r}, ${g}, ${b})`];
+    return `rgb(${r}, ${g}, ${b})`;
 }
