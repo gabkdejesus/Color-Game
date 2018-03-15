@@ -1,19 +1,21 @@
-let run = 1; //this is for checking how many times a player has played; playing at the start sets it to 1
+let playCount = 1; //this is for checking how many times a player has played; playing at the start sets it to 1
 let numSquares = 6;
 let colors = generateRandomColors(numSquares);
-let squares = document.querySelectorAll(".square");
 let pickedColor = pickColor();
-let colorDisplay = document.getElementById("colorDisplay");
-let messageDisplay = document.querySelector("#message");
+
+// Get dom elements
 let h1 = document.querySelector("h1");
-let resetButton = document.querySelector("#reset");
-let easyBtn = document.querySelector("#easyBtn");
-let hardBtn = document.querySelector("#hardBtn");
+let squares = document.getElementsByClassName('.square');
+let colorDisplay = document.getElementById("colorDisplay");
+let messageDisplay = document.getElementById("message");
+let resetButton = document.getElementById("reset");
+let easyBtn = document.getElementById("easyBtn");
+let hardBtn = document.getElementById("hardBtn");
 
 colorDisplay.textContent = pickedColor;
 
 easyBtn.addEventListener("click", function(){
-    ++run; //increment every time player plays again
+    ++playCount; //increment every time player plays again
     hardBtn.classList.remove("selected");
     easyBtn.classList.add("selected");
     numSquares = 3;
@@ -30,7 +32,7 @@ easyBtn.addEventListener("click", function(){
 });
 
 hardBtn.addEventListener("click", function(){
-    ++run; //increment every time player plays again
+    ++playCount;  
     easyBtn.classList.remove("selected");
     hardBtn.classList.add("selected");
     numSquares = 6;
@@ -44,7 +46,7 @@ hardBtn.addEventListener("click", function(){
 });
 
 resetButton.addEventListener("click",function(){
-    ++run; //increment every time player plays again
+    ++playCount; //increment every time player plays again
     //generate new colors
     colors = generateRandomColors(numSquares);
     //pick a new random color
@@ -96,33 +98,26 @@ function pickColor() {
 }
 
 function generateRandomColors(num) {
-    //make an array of colors
-    let arr = [];
-    //add num random Colors
-    //repeat num times
-    //if more than one time played
-    if(run > 1){
+    let colors = [];
+    if(playCount > 1){
         let getCurrentColorDisplay = document.getElementById("colorDisplay");
         let getRGBValues = getCurrentColorDisplay.textContent.match(/[+-]?\d+(?:\.\d+)?/g);
         for(let i = 0; i < num; i++) {
-            arr.push(randomColor(getRGBValues[0], getRGBValues[1], getRGBValues[2]));
+            colors.push(randomColor(getRGBValues[0], getRGBValues[1], getRGBValues[2]));
         }
     }else{
         for(let i = 0; i < num; i++) {
-            arr.push(randomColor(0,0,0));
+            colors.push(randomColor(0,0,0));
         }   
     }
-    //return array
-    return arr;
+    return colors;
 }
 
-function randomColor(oldRed,oldGreen,oldBlue) { //gets the old value
-    //added modulo 255 to formula to generate picking colors from 0-255
-    //pick red 0-255
+function randomColor(oldRed,oldGreen,oldBlue) { 
+    // let [r, g, b] = arguments.map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
     let r = (Math.floor(Math.random() * (256 - oldRed)) + oldRed) % 256;
-    //pick green 0-255
-    let g =  (Math.floor(Math.random() * (256 - oldGreen)) + oldGreen) % 256;
-    //pick blue 0-255
-    let b =(Math.floor(Math.random() * (256 - oldBlue)) + oldBlue) % 256;
+    let g = (Math.floor(Math.random() * (256 - oldGreen)) + oldGreen) % 256;
+    let b = (Math.floor(Math.random() * (256 - oldBlue)) + oldBlue) % 256;
+    console.log(r, g, b);
     return `rgb(${r}, ${g}, ${b})`;
 }
