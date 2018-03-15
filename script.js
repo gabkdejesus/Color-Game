@@ -99,25 +99,19 @@ function pickColor() {
 
 function generateRandomColors(num) {
     let colors = [];
-    if(playCount > 1){
+    if(playCount > 1) {
         let getCurrentColorDisplay = document.getElementById("colorDisplay");
         let getRGBValues = getCurrentColorDisplay.textContent.match(/[+-]?\d+(?:\.\d+)?/g);
-        for(let i = 0; i < num; i++) {
-            colors.push(randomColor(getRGBValues[0], getRGBValues[1], getRGBValues[2]));
-        }
-    }else{
-        for(let i = 0; i < num; i++) {
-            colors.push(randomColor(0,0,0));
-        }   
+        colors.push(randomizeRGB(getRGBValues));
+    }
+    else {
+        colors.push(randomizeRGB([0, 0, 0]));
     }
     return colors;
 }
 
-function randomColor(oldRed,oldGreen,oldBlue) { 
-    // let [r, g, b] = arguments.map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
-    let r = (Math.floor(Math.random() * (256 - oldRed)) + oldRed) % 256;
-    let g = (Math.floor(Math.random() * (256 - oldGreen)) + oldGreen) % 256;
-    let b = (Math.floor(Math.random() * (256 - oldBlue)) + oldBlue) % 256;
-    console.log(r, g, b);
+// Accepts an array of old RGB values, and returns an array of new ones
+function randomizeRGB(oldVals) { 
+    let [r, g, b] = arguments[0].map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
     return `rgb(${r}, ${g}, ${b})`;
 }
