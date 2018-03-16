@@ -1,6 +1,7 @@
 (function() {
 let numSquares = 6;
 let colors = [];
+
 // Get dom elements
 let h1 = document.querySelector("h1");
 let squares = document.getElementsByClassName('square');
@@ -9,25 +10,24 @@ let messageDisplay = document.getElementById("message");
 let easyBtn = document.getElementById("easyBtn");
 let hardBtn = document.getElementById("hardBtn");
 
-initGame(numSquares, squares);
+initGame();
 
 // Generates array of random RGB values, and picks one
-function initGame(numSquares, squares) {
+function initGame() {
     // Setup array of colors and which to use for the round
-    initColors(numSquares);
-    
+    initColors();
     // Setup squares and event listeners
-    initSquares(squares);
-
+    initSquares();
     // Setup buttons
     initOptions();
     initReset();
 }
 
-function initColors(numSquares) {
+// Make an array of randomly generated colors depending on game mode
+function initColors() {
     colors = generateRandomColors(numSquares);
-    pickedColor = pickRandomColor();
-    colorDisplay.textContent = pickedColor;
+    winningColor = pickWinningColor();
+    colorDisplay.textContent = winningColor;
     if(numSquares === 6) {
         for(let i = 0; i < squares.length; i++ ) {  
             squares[i].style.background = colors[i];
@@ -45,48 +45,16 @@ function initColors(numSquares) {
     }
 }
 
-// On click to reset colors
-function initReset() {
-    let resetBtn = document.getElementById('reset');
-    resetBtn.addEventListener('click', function() {
-        initColors(numSquares);
-        h1.style.background = "steelblue";
-        messageDisplay.textContent = " ";
-        this.textContent = "reset colors";
-    });
-}
-
-function initOptions() {
-    let buttons = document.getElementsByClassName('option');
-    for(let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function() {
-            if(this.getAttribute('id') === "hardBtn") {
-                hardBtn.classList.add('selected');
-                easyBtn.classList.remove('selected');
-                numSquares = 6;
-                initColors(numSquares);
-            } 
-            else if(this.getAttribute('id') === "easyBtn") {
-                hardBtn.classList.remove('selected');
-                easyBtn.classList.add('selected');
-                numSquares = 3;
-                initColors(numSquares);
-            }
-        });
-    }
-}
-
-// Setup squares colors
-function initSquares(squares) {
+// Setup squares colors and listeners
+function initSquares() {
     for(let i = 0; i < squares.length; i++) {
         squares[i].style.background = colors[i];
 
-        // Listener for correct guess
         squares[i].addEventListener("click", function(){
             let clickedColor = this.style.backgroundColor;
-            if(clickedColor === pickedColor) {
+            if(clickedColor === winningColor) {
                 messageDisplay.textContent = "Correct!";
-                changeColors(pickedColor);
+                changeColors(winningColor);
                 h1.style.background = clickedColor;
             }
             else {
@@ -97,28 +65,63 @@ function initSquares(squares) {
     }
 }
 
+// Setup option buttons
+function initOptions() {
+    let buttons = document.getElementsByClassName('option');
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function() {
+            if(this.getAttribute('id') === "hardBtn") {
+                hardBtn.classList.add('selected');
+                easyBtn.classList.remove('selected');
+                numSquares = 6;
+                initColors();
+            } 
+            else if(this.getAttribute('id') === "easyBtn") {
+                hardBtn.classList.remove('selected');
+                easyBtn.classList.add('selected');
+                numSquares = 3;
+                initColors();
+            }
+        });
+    }
+}
+
+// Setup reset button
+function initReset() {
+    let resetBtn = document.getElementById('reset');
+    resetBtn.addEventListener('click', function() {
+        initColors(numSquares);
+        h1.style.background = "steelblue";
+        messageDisplay.textContent = " ";
+        this.textContent = "reset colors";
+    });
+}
+
+// Change square colors
 function changeColors(color) {
     for(let i = 0; i < squares.length; i++) {
         squares[i].style.background = color;
     }
 }
 
-function pickRandomColor() {
+// Pick the color player needs to guess
+function pickWinningColor() {
     let random = Math.floor(Math.random() * colors.length);
     return colors[random];
 }
 
+// Generate random RGB values for each square
 function generateRandomColors(num) {
     let colors = [];
     for(let i = 0; i < num; i++) {
-        colors.push(randomizeNewRGB([0, 0, 0]));
+        colors.push(randomizeNewRGB());
     }
     return colors;
 }
 
-// Accepts an array of old RGB values, and returns an RGB value
-function randomizeNewRGB(oldVals) { 
-    let [r, g, b] = oldVals.map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
+// Return new RGB value tuple
+function randomizeNewRGB() { 
+    let [r, g, b] = [0, 0, 0].map(oldColorVal => (Math.floor(Math.random() * (256 - oldColorVal)) + oldColorVal) % 256);
     return `rgb(${r}, ${g}, ${b})`;
 }
 })();
